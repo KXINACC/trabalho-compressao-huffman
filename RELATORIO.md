@@ -10,7 +10,7 @@
 
 ### 1.1 Contador de Frequências
 
-**Função principal:** `countFrequencies()`
+**Função principal:** `contarFrequencias()`
 
 - **Leitura e tokenização:** O(n)
   - n = tamanho do arquivo em caracteres
@@ -24,7 +24,7 @@
 
 ### 1.2 Construção da Árvore de Huffman
 
-**Função:** `HuffmanTree::buildTree()`
+**Função:** `HuffmanTree::construirArvore()`
 
 **Etapa 1 - Inserção na fila de prioridade:**
 - k símbolos inseridos
@@ -46,7 +46,7 @@
 
 ### 1.3 Compressão
 
-**Função:** `compressFile()`
+**Função:** `comprimirArquivo()`
 
 1. **Leitura do arquivo:** O(n)
 2. **Tokenização:** O(n × log k)
@@ -59,7 +59,7 @@
 
 ### 1.4 Descompressão
 
-**Função:** `decompressFile()`
+**Função:** `descomprimirArquivo()`
 
 1. **Leitura do arquivo comprimido:** O(b), onde b = bits
 2. **Decodificação percorrendo árvore:** O(b × h), onde h = altura da árvore
