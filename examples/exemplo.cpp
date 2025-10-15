@@ -16,11 +16,11 @@ public:
     Estudante(const string& n, int i, double nt) 
         : nome(n), idade(i), nota(nt) {}
     
-    string getNome() const { return nome; }
-    int getIdade() const { return idade; }
-    double getNota() const { return nota; }
+    string obterNome() const { return nome; }
+    int obterIdade() const { return idade; }
+    double obterNota() const { return nota; }
     
-    void setNota(double nt) { nota = nt; }
+    void definirNota(double nt) { nota = nt; }
     
     void exibir() const {
         cout << "Nome: " << nome << endl;
@@ -37,7 +37,7 @@ double calcularMedia(const vector<Estudante>& estudantes) {
     
     double soma = 0.0;
     for (const auto& estudante : estudantes) {
-        soma += estudante.getNota();
+        soma += estudante.obterNota();
     }
     
     return soma / estudantes.size();
@@ -51,7 +51,7 @@ Estudante* encontrarMelhorAluno(vector<Estudante>& estudantes) {
     
     Estudante* melhor = &estudantes[0];
     for (auto& estudante : estudantes) {
-        if (estudante.getNota() > melhor->getNota()) {
+        if (estudante.obterNota() > melhor->obterNota()) {
             melhor = &estudante;
         }
     }
@@ -63,7 +63,7 @@ Estudante* encontrarMelhorAluno(vector<Estudante>& estudantes) {
 void ordenarPorNota(vector<Estudante>& estudantes) {
     sort(estudantes.begin(), estudantes.end(), 
          [](const Estudante& a, const Estudante& b) {
-             return a.getNota() > b.getNota();
+             return a.obterNota() > b.obterNota();
          });
 }
 
@@ -105,8 +105,8 @@ int main() {
     cout << "Ranking de Notas:" << endl;
     int posicao = 1;
     for (const auto& estudante : turma) {
-        cout << posicao++ << "º lugar: " << estudante.getNome() 
-             << " - Nota: " << estudante.getNota() << endl;
+        cout << posicao++ << "º lugar: " << estudante.obterNome() 
+             << " - Nota: " << estudante.obterNota() << endl;
     }
     
     return 0;

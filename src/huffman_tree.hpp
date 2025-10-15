@@ -17,7 +17,7 @@ struct HuffmanNode {
     HuffmanNode(const std::string& sym, int freq)
         : symbol(sym), frequency(freq), left(nullptr), right(nullptr) {}
     
-    bool isLeaf() const {
+    bool ehFolha() const {
         return left == nullptr && right == nullptr;
     }
 };
@@ -37,7 +37,7 @@ private:
     
     // Gera os codigos percorrendo a arvore
     // Complexidade: O(n) onde n e o numero de nos
-    void generateCodes(std::shared_ptr<HuffmanNode> node, const std::string& code);
+    void gerarCodigos(std::shared_ptr<HuffmanNode> node, const std::string& code);
     
 public:
     HuffmanTree() : raiz(nullptr) {}
@@ -45,15 +45,15 @@ public:
     // Monta a arvore usando o algoritmo de Huffman
     // Usa priority_queue pra pegar sempre os 2 menores
     // Complexidade: O(k log k) onde k eh numero de simbolos
-    void buildTree(const std::map<std::string, int>& frequencies);
+    void construirArvore(const std::map<std::string, int>& frequencies);
     
-    const std::map<std::string, std::string>& getCodes() const { return codigos; }
+    const std::map<std::string, std::string>& obterCodigos() const { return codigos; }
     
-    std::shared_ptr<HuffmanNode> getRoot() const { return raiz; }
+    std::shared_ptr<HuffmanNode> obterRaiz() const { return raiz; }
     
-    void printTree(std::shared_ptr<HuffmanNode> node = nullptr, int depth = 0) const;
+    void imprimirArvore(std::shared_ptr<HuffmanNode> node = nullptr, int depth = 0) const;
     
-    void printCodes() const;
+    void imprimirCodigos() const;
 };
 
 #endif // HUFFMAN_TREE_HPP

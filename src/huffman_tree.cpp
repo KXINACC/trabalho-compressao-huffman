@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 
-void HuffmanTree::buildTree(const std::map<std::string, int>& frequencies) {
+void HuffmanTree::construirArvore(const std::map<std::string, int>& frequencies) {
     if (frequencies.empty()) {
         std::cerr << "Erro: Tabela de frequencias vazia!" << std::endl;
         return;
@@ -39,23 +39,23 @@ void HuffmanTree::buildTree(const std::map<std::string, int>& frequencies) {
     raiz = heap.top();
     
     codigos.clear();
-    generateCodes(raiz, "");
+    gerarCodigos(raiz, "");
 }
 
-void HuffmanTree::generateCodes(std::shared_ptr<HuffmanNode> node, const std::string& code) {
+void HuffmanTree::gerarCodigos(std::shared_ptr<HuffmanNode> node, const std::string& code) {
     if (!node) return;
     
-    if (node->isLeaf()) {
+    if (node->ehFolha()) {
         codigos[node->symbol] = code.empty() ? "0" : code;
         return;
     }
     
     // Desce na arvore: esquerda = 0, direita = 1
-    generateCodes(node->left, code + "0");
-    generateCodes(node->right, code + "1");
+    gerarCodigos(node->left, code + "0");
+    gerarCodigos(node->right, code + "1");
 }
 
-void HuffmanTree::printTree(std::shared_ptr<HuffmanNode> node, int depth) const {
+void HuffmanTree::imprimirArvore(std::shared_ptr<HuffmanNode> node, int depth) const {
     if (!node) {
         node = raiz;
         if (!node) return;
@@ -63,23 +63,23 @@ void HuffmanTree::printTree(std::shared_ptr<HuffmanNode> node, int depth) const 
     
     std::string indent(depth * 2, ' ');
     
-    if (node->isLeaf()) {
+    if (node->ehFolha()) {
         std::cout << indent << "Folha: \"" << node->symbol 
                   << "\" (freq: " << node->frequency << ")" << std::endl;
     } else {
         std::cout << indent << "Nó interno (freq: " << node->frequency << ")" << std::endl;
         if (node->left) {
             std::cout << indent << "├─ Esquerda (0):" << std::endl;
-            printTree(node->left, depth + 1);
+            imprimirArvore(node->left, depth + 1);
         }
         if (node->right) {
             std::cout << indent << "└─ Direita (1):" << std::endl;
-            printTree(node->right, depth + 1);
+            imprimirArvore(node->right, depth + 1);
         }
     }
 }
 
-void HuffmanTree::printCodes() const {
+void HuffmanTree::imprimirCodigos() const {
     std::cout << "\n=== Codigos de Huffman Gerados ===" << std::endl;
     std::cout << std::left << std::setw(20) << "Simbolo" 
               << std::setw(15) << "Codigo" 

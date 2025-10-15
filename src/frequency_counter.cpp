@@ -33,14 +33,14 @@ const std::vector<std::string> CPP_KEYWORDS = {
     "include", "define", "ifdef", "ifndef", "endif", "pragma"
 };
 
-bool isKeyword(const std::string& word) {
+bool ehPalavraChave(const std::string& word) {
     return std::find(CPP_KEYWORDS.begin(), CPP_KEYWORDS.end(), word) != CPP_KEYWORDS.end();
 }
 
 // Funcao pra quebrar o texto em tokens
 // Se for keyword, trata como simbolo unico
 // Se nao, separa em caracteres individuais
-std::vector<std::string> tokenize(const std::string& text) {
+std::vector<std::string> tokenizar(const std::string& text) {
     std::vector<std::string> tokens;
     std::string palavra_atual;
     
@@ -51,7 +51,7 @@ std::vector<std::string> tokenize(const std::string& text) {
             palavra_atual += c;
         } else {
             if (!palavra_atual.empty()) {
-                if (isKeyword(palavra_atual)) {
+                if (ehPalavraChave(palavra_atual)) {
                     tokens.push_back(palavra_atual);
                 } else {
                     for (char ch : palavra_atual) {
@@ -66,7 +66,7 @@ std::vector<std::string> tokenize(const std::string& text) {
     }
     
     if (!palavra_atual.empty()) {
-        if (isKeyword(palavra_atual)) {
+        if (ehPalavraChave(palavra_atual)) {
             tokens.push_back(palavra_atual);
         } else {
             for (char ch : palavra_atual) {
@@ -79,7 +79,7 @@ std::vector<std::string> tokenize(const std::string& text) {
 }
 
 // Le o arquivo e conta quantas vezes cada simbolo aparece
-void countFrequencies(const std::string& filename, std::map<std::string, int>& frequencies) {
+void contarFrequencias(const std::string& filename, std::map<std::string, int>& frequencies) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Erro ao abrir arquivo: " << filename << std::endl;
@@ -90,7 +90,7 @@ void countFrequencies(const std::string& filename, std::map<std::string, int>& f
     while (std::getline(file, linha)) {
         linha += '\n';
         
-        auto tokens = tokenize(linha);
+        auto tokens = tokenizar(linha);
         
         for (const auto& token : tokens) {
             frequencies[token]++;
@@ -103,7 +103,7 @@ void countFrequencies(const std::string& filename, std::map<std::string, int>& f
 /**
  * Processa todos os arquivos de um diretório recursivamente
  */
-void processDirectory(const std::string& dirPath, std::map<std::string, int>& frequencies) {
+void processarDiretorio(const std::string& dirPath, std::map<std::string, int>& frequencies) {
     try {
         for (const auto& entry : fs::recursive_directory_iterator(dirPath)) {
             if (entry.is_regular_file()) {
@@ -111,7 +111,7 @@ void processDirectory(const std::string& dirPath, std::map<std::string, int>& fr
                 // Processa apenas arquivos C++
                 if (ext == ".cpp" || ext == ".hpp" || ext == ".h" || ext == ".cc" || ext == ".cxx") {
                     std::cout << "Processando: " << entry.path().string() << std::endl;
-                    countFrequencies(entry.path().string(), frequencies);
+                    contarFrequencias(entry.path().string(), frequencies);
                 }
             }
         }
@@ -123,7 +123,7 @@ void processDirectory(const std::string& dirPath, std::map<std::string, int>& fr
 /**
  * Salva a tabela de frequências em um arquivo
  */
-void saveFrequencyTable(const std::map<std::string, int>& frequencies, const std::string& outputFile) {
+void salvarTabelaFrequencias(const std::map<std::string, int>& frequencies, const std::string& outputFile) {
     std::ofstream file(outputFile);
     if (!file.is_open()) {
         std::cerr << "Erro ao criar arquivo de saída: " << outputFile << std::endl;
@@ -149,7 +149,7 @@ void saveFrequencyTable(const std::map<std::string, int>& frequencies, const std
 /**
  * Imprime estatísticas da tabela de frequências
  */
-void printStatistics(const std::map<std::string, int>& frequencies) {
+void imprimirEstatisticas(const std::map<std::string, int>& frequencies) {
     int totalSymbols = 0;
     int totalOccurrences = 0;
     
@@ -205,9 +205,9 @@ int main(int argc, char* argv[]) {
     
     // Verifica se é arquivo ou diretório
     if (fs::is_directory(inputPath)) {
-        processDirectory(inputPath, frequencies);
+        processarDiretorio(inputPath, frequencies);
     } else if (fs::is_regular_file(inputPath)) {
-        countFrequencies(inputPath, frequencies);
+        contarFrequencias(inputPath, frequencies);
     } else {
         std::cerr << "Erro: Caminho inválido: " << inputPath << std::endl;
         return 1;
@@ -219,10 +219,10 @@ int main(int argc, char* argv[]) {
     }
     
     // Imprime estatísticas
-    printStatistics(frequencies);
+    imprimirEstatisticas(frequencies);
     
     // Salva a tabela
-    saveFrequencyTable(frequencies, outputFile);
+    salvarTabelaFrequencias(frequencies, outputFile);
     
     return 0;
 }

@@ -8,7 +8,7 @@
 namespace fs = std::filesystem;
 
 // Le a tabela de frequencias do arquivo
-std::map<std::string, int> loadFrequencyTable(const std::string& filename) {
+std::map<std::string, int> carregarTabelaFrequencias(const std::string& filename) {
     std::map<std::string, int> frequencies;
     std::ifstream file(filename);
     
@@ -39,7 +39,7 @@ std::map<std::string, int> loadFrequencyTable(const std::string& filename) {
 }
 
 // Quebra o texto em tokens (igual ao frequency_counter)
-std::vector<std::string> tokenize(const std::string& text, const std::map<std::string, int>& frequencies) {
+std::vector<std::string> tokenizar(const std::string& text, const std::map<std::string, int>& frequencies) {
     std::vector<std::string> tokens;
     std::string palavra;
     
@@ -78,9 +78,9 @@ std::vector<std::string> tokenize(const std::string& text, const std::map<std::s
 }
 
 // Funcao que comprime o arquivo
-bool compressFile(const std::string& inputFile, const std::string& outputFile, 
-                  const std::map<std::string, std::string>& codes,
-                  const std::map<std::string, int>& frequencies) {
+bool comprimirArquivo(const std::string& inputFile, const std::string& outputFile, 
+                      const std::map<std::string, std::string>& codes,
+                      const std::map<std::string, int>& frequencies) {
     // Lê o arquivo de entrada
     std::ifstream inFile(inputFile);
     if (!inFile.is_open()) {
@@ -94,7 +94,7 @@ bool compressFile(const std::string& inputFile, const std::string& outputFile,
     inFile.close();
     
     // Tokeniza o conteúdo
-    auto tokens = tokenize(content, frequencies);
+    auto tokens = tokenizar(content, frequencies);
     
     // Gera a sequência de bits
     std::string bitString;
@@ -148,8 +148,8 @@ bool compressFile(const std::string& inputFile, const std::string& outputFile,
 }
 
 // Funcao que descomprime o arquivo
-bool decompressFile(const std::string& inputFile, const std::string& outputFile,
-                    std::shared_ptr<HuffmanNode> root) {
+bool descomprimirArquivo(const std::string& inputFile, const std::string& outputFile,
+                         std::shared_ptr<HuffmanNode> root) {
     std::ifstream inFile(inputFile, std::ios::binary);
     if (!inFile.is_open()) {
         std::cerr << "Erro ao abrir arquivo comprimido: " << inputFile << std::endl;
@@ -193,7 +193,7 @@ bool decompressFile(const std::string& inputFile, const std::string& outputFile,
         }
         
         // Se chegou em uma folha, adiciona o símbolo
-        if (currentNode->isLeaf()) {
+        if (currentNode->ehFolha()) {
             decodedContent += currentNode->symbol;
             currentNode = root; // Volta para a raiz
         }
@@ -216,7 +216,7 @@ bool decompressFile(const std::string& inputFile, const std::string& outputFile,
     return true;
 }
 
-void printUsage(const char* programName) {
+void imprimirUso(const char* programName) {
     std::cout << "Uso: " << programName << " <modo> <arquivo_entrada> <arquivo_saída> <tabela_frequências>" << std::endl;
     std::cout << "\nModos:" << std::endl;
     std::cout << "  -c, --compress     Comprimir arquivo" << std::endl;
@@ -228,7 +228,7 @@ void printUsage(const char* programName) {
 
 int main(int argc, char* argv[]) {
     if (argc < 5) {
-        printUsage(argv[0]);
+        imprimirUso(argv[0]);
         return 1;
     }
     
@@ -241,7 +241,7 @@ int main(int argc, char* argv[]) {
     
     // Carrega a tabela de frequências
     std::cout << "Carregando tabela de frequências..." << std::endl;
-    auto frequencies = loadFrequencyTable(freqFile);
+    auto frequencies = carregarTabelaFrequencias(freqFile);
     
     if (frequencies.empty()) {
         std::cerr << "Erro: Tabela de frequências vazia ou inválida!" << std::endl;
@@ -253,28 +253,28 @@ int main(int argc, char* argv[]) {
     // Constrói a árvore de Huffman
     std::cout << "Construindo árvore de Huffman..." << std::endl;
     HuffmanTree tree;
-    tree.buildTree(frequencies);
+    tree.construirArvore(frequencies);
     
     if (mode == "-c" || mode == "--compress") {
         // Modo compressão
-        auto codes = tree.getCodes();
+        auto codes = tree.obterCodigos();
         std::cout << "Códigos gerados: " << codes.size() << std::endl;
         
-        return compressFile(inputFile, outputFile, codes, frequencies) ? 0 : 1;
+        return comprimirArquivo(inputFile, outputFile, codes, frequencies) ? 0 : 1;
         
     } else if (mode == "-d" || mode == "--decompress") {
         // Modo descompressão
-        auto root = tree.getRoot();
+        auto root = tree.obterRaiz();
         if (!root) {
             std::cerr << "Erro: Árvore de Huffman inválida!" << std::endl;
             return 1;
         }
         
-        return decompressFile(inputFile, outputFile, root) ? 0 : 1;
+        return descomprimirArquivo(inputFile, outputFile, root) ? 0 : 1;
         
     } else {
         std::cerr << "Erro: Modo inválido: " << mode << std::endl;
-        printUsage(argv[0]);
+        imprimirUso(argv[0]);
         return 1;
     }
     

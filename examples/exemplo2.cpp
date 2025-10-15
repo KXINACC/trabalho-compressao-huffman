@@ -4,7 +4,7 @@
 #include <algorithm>
 
 // Algoritmo de busca binária
-int buscaBinaria(const std::vector<int>& arr, int target) {
+int buscarBinariamente(const std::vector<int>& arr, int target) {
     int left = 0;
     int right = arr.size() - 1;
     
@@ -24,7 +24,7 @@ int buscaBinaria(const std::vector<int>& arr, int target) {
 }
 
 // Algoritmo de ordenação QuickSort
-void quickSort(std::vector<int>& arr, int low, int high) {
+void ordenacaoRapida(std::vector<int>& arr, int low, int high) {
     if (low < high) {
         int pivot = arr[high];
         int i = low - 1;
@@ -39,8 +39,8 @@ void quickSort(std::vector<int>& arr, int low, int high) {
         std::swap(arr[i + 1], arr[high]);
         int pi = i + 1;
         
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+        ordenacaoRapida(arr, low, pi - 1);
+        ordenacaoRapida(arr, pi + 1, high);
     }
 }
 
@@ -53,7 +53,7 @@ int main() {
     }
     std::cout << std::endl;
     
-    quickSort(numeros, 0, numeros.size() - 1);
+    ordenacaoRapida(numeros, 0, numeros.size() - 1);
     
     std::cout << "Array ordenado: ";
     for (int num : numeros) {
@@ -62,7 +62,7 @@ int main() {
     std::cout << std::endl;
     
     int busca = 25;
-    int resultado = buscaBinaria(numeros, busca);
+    int resultado = buscarBinariamente(numeros, busca);
     
     if (resultado != -1) {
         std::cout << "Elemento " << busca << " encontrado na posição " << resultado << std::endl;
