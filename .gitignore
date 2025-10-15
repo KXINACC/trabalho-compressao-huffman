@@ -1,0 +1,40 @@
+# Arquivos compilados
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# Diretórios de build
+build/
+bin/
+
+# Arquivos comprimidos
+*.huf
+*.compressed
+
+# Arquivos de frequência gerados
+frequencias.txt
+freq_*.txt
+
+# Arquivos temporários
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+
+# Arquivos de teste gerados
+*_restaurado.*
+*_descomprimido.*
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+
+# Logs
+*.log
+
+
